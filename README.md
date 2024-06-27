@@ -3,7 +3,7 @@
 This software is based on the latest [MAPF-LNS implementation](https://github.com/Jiaoyang-Li/MAPF-LNS2) from [1].
 
 ## Featured Algorithm
-- BALANCE: **B**andit-based **A**daptive **LA**rge **N**eighborhood search **C**ombined with **E**xploration [2]
+- ADDRESS: Adaptive Delay-based Destroy-and-Repair Enhanced with Success-based Self-Learning from [2].
 
 ## Usage
 The code requires the external libraries [`BOOST 1.81.0`](https://www.boost.org/) and [`Eigen 3.3`](https://eigen.tuxfamily.org/), and [`CMake`](https://cmake.org) for building the code. 
@@ -16,11 +16,7 @@ make
 
 Run the code with:
 ```
-./balance -m room-32-32-4.map -a room-32-32-4-random-1.scen -o test -k 200 -t 60 --outputPaths=paths.txt --seed=0 --maxIterations=1000000 --destroyStrategy=Intersection --screen=1 --algorithm=bernoulie --b=replace --epsilon=0.9 --decay=0.005 --k=64 --regions=1000 --banditAlgo=Roulette --neighborCandidateSizes=5
-
-canonical epsilongreedy=0.3 0.5 0.9 1 bernoulie normal
-
-./balance -m "ost003d.map" -a "ost003d-random-1.scen" -o test -k "600" -t 60  --maxIterations 100000000 --algorithm canonical --screen 1 --epsilon 0 --decay 0  --k 8 --stats "stats.txt" --destroyStrategy "RandomWalk"
+./balance -m empty-32-32.map -a empty-32-32-random-1.scen -o test -k "300" -t 60  --maxIterations 100000000 --algorithm canonical --screen 1 --epsilon 0 --decay 0  --k 8 --stats "stats.txt" --destroyStrategy "RandomWalk"
 
 ```
 
