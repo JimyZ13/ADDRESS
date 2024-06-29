@@ -15,7 +15,9 @@ make
 
 Run the code with:
 ```
-./address -m Paris_1_256.map -a Paris_1_256-random-1.scen -o test -k 600 -t 60 --stats "stats.txt" --outputPaths=paths.txt --seed=0 --maxIterations=1000000 --destroyStrategy=Adaptive --screen=1 --algorithm=canonical --b=add --epsilon=0.9 --decay=0.005 --k=64 --regions=1000 --banditAlgo=Thompson --neighborCandidateSizes=5
+./address -m Paris_1_256.map -a Paris_1_256-random-1.scen -o test -k 600 -t 60 --stats "stats.txt"
+--outputPaths=paths.txt --seed=0 --maxIterations=1000000 --destroyStrategy=Adaptive --screen=1 --algorithm=canonical
+--b=add --epsilon=0.9 --decay=0.005 --k=64 --regions=1000 --banditAlgo=Thompson --neighborCandidateSizes=5
 
 ```
 
@@ -25,12 +27,14 @@ Run the code with:
 - k: the number of agents
 - t: the runtime limit
 - outputPaths: the output file that contains the paths
+- algorithm: the algorithm to run for choosing a destroy heuristic in ADDRESS
+- b: the flag to insert ADDRESS into MAPF-LNS's ALNS framework 
+- epsilon: floating point number to specify the epsilon in epsilon-related algorithms in ADDRESS
+- decay: floating point number to specify the decay in decay-related algorithms in ADDRESS
+- k: the "k"-most delayed agents which address chooses from in ADDRESS
+- regions: the number of regions to split the map into in ADDRESS
 - banditAlgo: the multi-armed bandit algorithm used in BALANCE
 - neighborCandidateSizes: the number of neighborhood size options
-- seed: the random seed
-
--- algorithm: this is the algorithm to use in the destroy strategy 
--- b: this is the control the subset that alns choses from, destroyStrategy must be Adaptive for this to work. This parameter also overrides the algorithm parameter: if b==canonical, algorithm is set to canonical, else algorithm is set to bernoulie. 
 
 You can find more details and explanations for all parameters with:
 ```
