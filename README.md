@@ -2,7 +2,7 @@
 
 This software is based on the latest [MAPF-LNS implementation](https://github.com/Jiaoyang-Li/MAPF-LNS2) from [1] and [Anytime Multi-Agent Path Finding](https://github.com/thomyphan/anytime-mapf) from [2].
 
-ADDRESS is a bandit-enhanced anytime multi-agent path-finding algorithm. The algorithmic framework is based on MAPF-LNS [1] and the neighborhood destroy heuristic is replaced with a Thomson Sampling Bandit. 
+ADDRESS is a bandit-enhanced anytime multi-agent path-finding algorithm. The algorithmic framework is based on MAPF-LNS [1] with the neighborhood destroy heuristic replaced by a Thomson Sampling Bandit. 
 
 ## Usage
 The code requires the external libraries [`BOOST 1.81.0`](https://www.boost.org/) and [`Eigen 3.3`](https://eigen.tuxfamily.org/), and [`CMake`](https://cmake.org) for building the code. 
