@@ -1,4 +1,4 @@
-# Anytime Multi-Agent Path Finding
+# Bandit-based Adaptive Anytime Multi-Agent Path Finding
 
 This software is based on the latest [MAPF-LNS implementation](https://github.com/Jiaoyang-Li/MAPF-LNS2) from [1] and [Anytime Multi-Agent Path Finding](https://github.com/thomyphan/anytime-mapf) from [2].
 
