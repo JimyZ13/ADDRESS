@@ -1,4 +1,4 @@
-project(balance)
+project(address)
 
 cmake_minimum_required (VERSION 3.16)
 set (CMAKE_CXX_STANDARD 14)
@@ -9,7 +9,7 @@ ENDIF()
 
 include_directories("inc" "inc/CBS" "inc/PIBT")
 file(GLOB SOURCES "src/*.cpp" "src/CBS/*.cpp" "src/PIBT/*.cpp")
-add_executable(balance ${SOURCES})
+add_executable(address ${SOURCES})
 
 # Find Boost
 find_package(Boost REQUIRED COMPONENTS program_options system filesystem)
@@ -18,4 +18,4 @@ find_package(Boost REQUIRED COMPONENTS program_options system filesystem)
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 include_directories( ${Boost_INCLUDE_DIRS} )
-target_link_libraries(balance ${Boost_LIBRARIES} Eigen3::Eigen)
+target_link_libraries(address ${Boost_LIBRARIES} Eigen3::Eigen)

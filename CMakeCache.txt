@@ -158,7 +158,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=balance
+CMAKE_PROJECT_NAME:STATIC=address
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib
@@ -227,6 +227,15 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
 //The directory containing a CMake configuration file for Eigen3.
 Eigen3_DIR:PATH=/opt/homebrew/share/eigen3/cmake
+
+//Value Computed by CMake
+address_BINARY_DIR:STATIC=/Users/benranzhang/Desktop/Everything/Research/anytime-mapf-main
+
+//Value Computed by CMake
+address_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+address_SOURCE_DIR:STATIC=/Users/benranzhang/Desktop/Everything/Research/anytime-mapf-main
 
 //Value Computed by CMake
 balance_BINARY_DIR:STATIC=/Users/benranzhang/Desktop/Everything/Research/anytime-mapf-main
