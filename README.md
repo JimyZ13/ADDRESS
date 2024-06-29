@@ -1,6 +1,6 @@
 # Anytime Multi-Agent Path Finding
 
-This software is based on the latest [MAPF-LNS implementation](https://github.com/Jiaoyang-Li/MAPF-LNS2) from [1].
+This software is based on the latest [MAPF-LNS implementation](https://github.com/Jiaoyang-Li/MAPF-LNS2) from [1] and [Anytime Multi-Agent Path Finding](https://github.com/thomyphan/anytime-mapf) from [2].
 
 ## Featured Algorithm
 - ADDRESS: Adaptive Delay-based Destroy-and-Repair Enhanced with Success-based Self-Learning from [2].
