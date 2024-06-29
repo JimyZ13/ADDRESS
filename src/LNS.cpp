@@ -30,7 +30,6 @@ LNS::LNS(const Instance& instance, double time_limit, const string & init_algo_n
     location_q_values = new std::vector<double>();
     start_time = Time::now();
     replan_time_limit = time_limit / 100;
-    
     if (destroy_name == "Adaptive")
     {
         if (b == "canonical"){
@@ -103,12 +102,16 @@ LNS::LNS(const Instance& instance, double time_limit, const string & init_algo_n
     }
     
     this->regions = regions;
+
+    this->neighbor_size = 8;
     alpha = std::vector<int>(num_agent, 1);
     beta = std::vector<int>(num_agent, 1);
     location_alpha = std::vector<int>(regions, 1);
     location_beta = std::vector<int>(regions, 1);
     mu = std::vector<double>(num_agent, 0.0);
     sigma2 = std::vector<double>(num_agent, 1.0);
+    location_mu = std::vector<double>();
+    location_sigma2 = std::vector<double>();
     int N = instance.getDefaultNumberOfAgents();
     agents.reserve(N);
     for (int i = 0; i < N; i++)
@@ -163,8 +166,9 @@ bool LNS::run()
     }
 
     int searchSuccess = succ? 1 : 0;
+    string weights = "";
     iteration_stats.emplace_back(neighbor.agents.size(),
-                                 initial_sum_of_costs, initial_solution_runtime, init_algo_name, 0, 0, searchSuccess);
+                                 initial_sum_of_costs, initial_solution_runtime, init_algo_name, weights , 0, 0, searchSuccess);
     runtime = initial_solution_runtime;
     if (succ)
     {
@@ -259,7 +263,43 @@ bool LNS::run()
                  << "group size = " << neighbor.agents.size() << ", "
                  << "solution cost = " << sum_of_costs << ", "
                  << "remaining time = " << time_limit - runtime << endl;
-        iteration_stats.emplace_back(neighbor.agents.size(), sum_of_costs, runtime, replan_algo_name, 0, 0, searchSuccess);
+
+        double weightSum = 0;
+        for (size_t i = 0; i < neighborhoodBanditStats.size(); ++i) {
+            for (int j = 0; j < neighborhoodBanditStats[i]->destroy_weights.size(); j++){
+                weightSum += neighborhoodBanditStats[i]->destroy_weights[j];
+            }
+        }
+        std::ostringstream oss;
+        oss << "\"";
+        for (size_t i = 0; i < neighborhoodBanditStats.size(); ++i) {
+            string name;
+            switch (i)
+            {
+            case 0:
+                name = "random walk";
+                break;
+            case 1:
+                name = "random";
+                break;
+            case 2:
+                name = "intersection";
+                break;
+            case 3:
+                name = "bernoulie";
+                break;
+            default:
+                break;
+            }
+            oss << name << " : ";
+            for (int j = 0; j < neighborhoodBanditStats[i]->destroy_weights.size(); j++){
+                oss << j << " = " << neighborhoodBanditStats[i]->destroy_weights[j]/weightSum << "; ";
+            }
+        }
+        oss << "\"";
+        std::string weights = oss.str();
+        cout << weights<<endl;
+        iteration_stats.emplace_back(neighbor.agents.size(), sum_of_costs, runtime, replan_algo_name, weights, 0, 0, searchSuccess);
     }
 
 
@@ -516,6 +556,19 @@ bool LNS::runPP()
                     location_beta[current_index]++;
                 }
             }
+            else if (algo == NORMAL){
+                double reward = sum_of_costs;
+                double n = (*location_frequency)[current_index];
+                double old_mu = location_mu[current_index];
+                double old_sigma2 = location_sigma2[current_index];
+
+                // Update mean and variance
+                double new_mu = old_mu + (reward - old_mu) / n;
+                double new_sigma2 = ((n - 1) * old_sigma2 + (reward - old_mu) * (reward - new_mu)) / n;
+
+                location_mu[current_index] = new_mu;
+                location_sigma2[current_index] = new_sigma2;
+            }
         }
     }
     if (remaining_agents == 0 && neighbor.sum_of_costs <= neighbor.old_sum_of_costs) // accept new paths
@@ -708,8 +761,10 @@ bool LNS::generateNeighborByIntersection()
                 num_valid_spaces++;
         }
         for (int i = 0; i < regions; i++){
-            (*location_q_values).push_back(0);
-            (*location_frequency).push_back(0);
+            (*location_q_values).push_back(INT_MAX-1);
+            (*location_frequency).push_back(0); 
+            (location_mu).push_back(0.0);
+            (location_sigma2).push_back(1.0);
         }
     }
     int location = 0;
@@ -877,6 +932,12 @@ int LNS::location_wrapper(){
         case BERNOULIE:
             return location_bernoulie();
             break;
+        case NORMAL:
+            return location_normal();
+            break;
+        default:
+            cout << "Error algorithm not implemented" << endl;
+            exit(0);
     }
 }
 
@@ -1134,6 +1195,24 @@ int LNS::normal() {
     (*frequency)[best_agent]++;
     current_index = best_agent;
     return best_agent;
+}
+
+int LNS::location_normal() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::vector<double> samples(regions);
+
+    // Sample from the Gaussian distribution for each agent
+    for (int i = 0 ; i < regions ; i++) {
+        std::normal_distribution<double> normal_dist(location_mu[i], std::sqrt(location_sigma2[i]));
+        samples[i] = normal_dist(gen);
+    }
+
+    // Find the agent with the minimum sample value
+    int best_index = std::distance(samples.begin(), std::min_element(samples.begin(), samples.end()));
+    (*location_frequency)[best_index]++;
+    current_index = best_index;
+    return best_index;
 }
 
 int LNS::topKEpsilonGreedy()
@@ -1525,22 +1604,42 @@ void LNS::writeIterStatsToFile(const string & file_name) const
     std::ofstream output;
     output.open(name);
     // header
-    output << "num of agents," <<
-           "sum of costs," <<
-           "runtime," <<
-           "cost lowerbound," <<
-           "sum of distances," <<
-           "MAPF algorithm" << endl;
-
-    for (const auto &data : iteration_stats)
-    {
-        output << data.num_of_agents << "," <<
-               data.sum_of_costs << "," <<
-               data.runtime << "," <<
-               max(sum_of_costs_lowerbound, sum_of_distances) << "," <<
-               sum_of_distances << "," <<
-               data.algorithm << endl;
+    cout << "======"<< ALNS << "=======" << endl;
+    if (1 > 0){
+        output << "num of agents," <<
+            "sum of costs," <<
+            "weights," << 
+            "runtime," <<
+            "cost lowerbound," <<
+            "sum of distances," <<
+            "MAPF algorithm" << endl;
+            for (const auto &data : iteration_stats)
+            {
+                output << data.num_of_agents << "," <<
+                    data.sum_of_costs << "," << data.weights << "," << data.runtime << "," <<
+                    max(sum_of_costs_lowerbound, sum_of_distances) << "," <<
+                    sum_of_distances << "," <<
+                    data.algorithm << endl;
+            }
     }
+    else {
+        output << "num of agents," <<
+            "sum of costs," <<
+            "runtime," <<
+            "cost lowerbound," <<
+            "sum of distances," <<
+            "MAPF algorithm" << endl;
+        for (const auto &data : iteration_stats)
+        {
+            output << data.num_of_agents << "," <<
+                data.sum_of_costs << "," <<
+                data.runtime << "," <<
+                max(sum_of_costs_lowerbound, sum_of_distances) << "," <<
+                sum_of_distances << "," <<
+                data.algorithm << endl;
+        }
+    }
+    
     output.close();
 }
 

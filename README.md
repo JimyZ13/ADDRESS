@@ -16,7 +16,15 @@ make
 
 Run the code with:
 ```
+./balance -m Paris_1_256.map -a Paris_1_256-random-1.scen -o test -k 600 -t 60 --stats "stats.txt" --outputPaths=paths.txt --seed=0 --maxIterations=1000000 --destroyStrategy=Adaptive --screen=1 --algorithm=canonical --b=add --epsilon=0.9 --decay=0.005 --k=64 --regions=1000 --banditAlgo=Thompson --neighborCandidateSizes=5
+
+./balance -m random-32-32-20.map -a random-32-32-20-random-1.scen -o test -k 200 -t 60 --stats "stats.txt" --outputPaths=paths.txt --seed=0 --maxIterations=1000000 --destroyStrategy=Adaptive --screen=1 --algorithm=canonical --b=add --epsilon=0.9  --k=32 --regions=1000 --banditAlgo=Roulette --neighborCandidateSizes=1
+
+canonical epsilongreedy=0.3 0.5 0.9 1 bernoulie normal
+
 ./balance -m empty-32-32.map -a empty-32-32-random-1.scen -o test -k "300" -t 60  --maxIterations 100000000 --algorithm canonical --screen 1 --epsilon 0 --decay 0  --k 8 --stats "stats.txt" --destroyStrategy "RandomWalk"
+
+./balance -m random-32-32-20.map -a random-32-32-20-random-1.scen -o test -k "200" -t 60  --maxIterations 100000000 --algorithm normal --screen 1 --epsilon 0 --decay 0  --k 8 --stats "stats.txt" --destroyStrategy "Intersection" --regions=64 --neighborSize=8
 
 ```
 

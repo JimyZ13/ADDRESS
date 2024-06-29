@@ -43,7 +43,7 @@ void AnytimeBCBS::run()
             sum_of_costs = bcbs.solution_cost;
             best_goal_node = bcbs.getGoalNode();
             iteration_stats.emplace_back(instance.getDefaultNumberOfAgents(), sum_of_costs,
-                                         runtime, "BCBS", sum_of_costs_lowerbound);
+                                         runtime, "BCBS", "", sum_of_costs_lowerbound);
         }
 
         if (screen >= 1)

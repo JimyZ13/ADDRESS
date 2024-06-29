@@ -56,7 +56,7 @@ void BasicLNS::sampleDestroyHeuristicAndNeighborhoodSize()
     if(numberOfNeighborhoodSizeCandidates > 0)
     {
         neighbor_arm_index = sampleDestroyHeuristic(neighborhoodBanditStats[selected_neighbor]);
-        neighbor_size = 1<<(neighbor_arm_index+1);
+        //neighbor_size = 1<<(neighbor_arm_index+1);
     }
 }
 

@@ -80,7 +80,8 @@ private:
 
     std::vector<double> mu;
     std::vector<double> sigma2;
-
+    std::vector<double> location_mu;
+    std::vector<double> location_sigma2;
 
     PathTable path_table; // 1. stores the paths of all agents in a time-space table;
     // 2. avoid making copies of this variable as much as possible.
@@ -126,6 +127,7 @@ private:
     int bernoulie();
     int location_bernoulie();
     int normal();
+    int location_normal();
     void randomWalk(int agent_id, int start_location, int start_timestep,
                     set<int>& neighbor, int neighbor_size, int upperbound);
 };

@@ -53,7 +53,7 @@ bool InitLNS::run()
     start_time = Time::now();
     bool succ = getInitialSolution();
     runtime = ((fsec)(Time::now() - start_time)).count();
-    iteration_stats.emplace_back(neighbor.agents.size(), sum_of_costs, runtime, "PP", 0, num_of_colliding_pairs);
+    iteration_stats.emplace_back(neighbor.agents.size(), sum_of_costs, runtime, "PP", "", 0, num_of_colliding_pairs);
     if (screen >= 3)
         printPath();
     if (screen >= 1)
@@ -184,7 +184,7 @@ bool InitLNS::run()
                  << "colliding pairs = " << num_of_colliding_pairs << ", "
                  << "solution cost = " << sum_of_costs << ", "
                  << "remaining time = " << time_limit - runtime << endl;
-        iteration_stats.emplace_back(neighbor.agents.size(), sum_of_costs, runtime, replan_algo_name,
+        iteration_stats.emplace_back(neighbor.agents.size(), sum_of_costs, runtime, replan_algo_name, "",
                                      0, num_of_colliding_pairs);
     }
 

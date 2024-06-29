@@ -46,7 +46,7 @@ void AnytimeEECBS::run()
             }
             w = 1 + 0.99 * (sum_of_costs * 1.0 / sum_of_costs_lowerbound - 1);
             iteration_stats.emplace_back(instance.getDefaultNumberOfAgents(), sum_of_costs,
-                                         runtime, "EECBS("+ std::to_string(w) + ")", sum_of_costs_lowerbound);
+                                         runtime, "EECBS("+ std::to_string(w) + ")", "", sum_of_costs_lowerbound);
         }
 
         if (screen >= 1)
