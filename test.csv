@@ -1,0 +1,5 @@
+runtime,solution cost,initial solution cost,lower bound,sum of distance,iterations,group size,runtime of initial solution,restart times,area under curve,LL expanded nodes,LL generated,LL reopened,LL runs,preprocessing runtime,solver name,instance name
+60.0002,196526,224341,189158,189158,1704,7.57957,2.70441,0,790374,7742104,20125562,506816,13893,12.4386,LNS(PP;PP),/home1/jimyzhan/MAPF-LNS2-init-LNS/maps/paris/Paris_1_256-random-1.scen
+60.0009,190784,224341,-1,189158,1671,6.50838,2.91169,0,530069,7757791,18443255,1059347,11864,12.7981,LNS(PP;PP),/home1/jimyzhan/anytime-mapf-main/maps/paris/Paris_1_256-random-1.scen,1,4199608,8
+60.0174,194514,224341,-1,189158,1876,6.192,2.69197,0,712851,8271785,19925297,1047779,12597,12.3971,LNS(PP;PP),/home1/jimyzhan/anytime-mapf-main/maps/paris/Paris_1_256-random-1.scen,1,0,8
+60.0001,9738,13559,6760,6760,16428,8.02374,2.14534,0,207156,25337084,28152841,3718480,117205,0.0606317,LNS(PP;PP),/home1/jimyzhan/MAPF-LNS2-init-LNS/maps/random/random-32-32-20-random-1.scen
