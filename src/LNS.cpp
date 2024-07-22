@@ -836,22 +836,36 @@ bool LNS::generateNeighborByRandomWalk(int b)
         return true;
     }
     int a = -1;
+    if (b){
+        a = bernoulie();
+    }
+    else {
+        a = wrapper();
+    }
+    if (a < 0)
+        return false;
     
     set<int> neighbors_set;
+    neighbors_set.insert(a);
+    randomWalk(a, agents[a].path[0].location, 0, neighbors_set, neighbor_size, (int) agents[a].path.size() - 1);
     int count = 0;
     while (neighbors_set.size() < neighbor_size && count < 10)
     {
-        if (b){
-            a = bernoulie();
-        }
-        else {
-            a = wrapper();
-        }
-        if (a < 0 )
-            return false;
         int t = rand() % agents[a].path.size();
         randomWalk(a, agents[a].path[t].location, t, neighbors_set, neighbor_size, (int) agents[a].path.size() - 1);
         count++;
+        // select the next agent randomly
+        int idx = rand() % neighbors_set.size();
+        int i = 0;
+        for (auto n : neighbors_set)
+        {
+            if (i == idx)
+            {
+                a = i;
+                break;
+            }
+            i++;
+        }
     }
     if (neighbors_set.size() < 2){
         return false;
@@ -963,20 +977,29 @@ bool LNS::generateNeighborByRandomWalkProbSelect()
         }
     }
 
-
+    int a = findAgentBasedOnDelay();
+    if (a < 0)
+        return false;
     set<int> neighbors_set;
     int count = 0;
+    randomWalk(a, agents[a].path[0].location, 0, neighbors_set, neighbor_size, (int) agents[a].path.size() - 1);
     while (neighbors_set.size() < neighbor_size && count < 10)
     {
-        int a = findAgentBasedOnDelay();
-        if (a < 0)
-            return false;
-
         int t = rand() % agents[a].path.size();
         randomWalk(a, agents[a].path[t].location, t, neighbors_set, neighbor_size, (int) agents[a].path.size() - 1);
         count++;
-//        cout << "## randomwalk_iter : " << count << " removal_set_size : " << neighbors_set.size() << " agent : " << a << " delay : " << agents[a].getNumOfDelays() << " (" << max_delay << ")" << endl;
-
+        //adjusting here to randomly explore the neighborhood
+                int idx = rand() % neighbors_set.size();
+        int i = 0;
+        for (auto n : neighbors_set)
+        {
+            if (i == idx)
+            {
+                a = i;
+                break;
+            }
+            i++;
+        }
     }
     if (neighbors_set.size() < 2)
         return false;
