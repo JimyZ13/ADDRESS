@@ -86,6 +86,8 @@ private:
     std::vector<double> location_mu;
     std::vector<double> location_sigma2;
 
+    std::set<int> local_tabu;
+
     PathTable path_table; // 1. stores the paths of all agents in a time-space table;
     // 2. avoid making copies of this variable as much as possible.
     unordered_set<int> tabu_list; // used by randomwalk strategy

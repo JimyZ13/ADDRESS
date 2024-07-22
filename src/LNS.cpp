@@ -836,37 +836,23 @@ bool LNS::generateNeighborByRandomWalk(int b)
         return true;
     }
     int a = -1;
-    if (b){
-        a = bernoulie();
-    }
-    else {
-        a = wrapper();
-    }
-    if (a < 0)
-        return false;
-    
-    set<int> neighbors_set;
-    neighbors_set.insert(a);
-    randomWalk(a, agents[a].path[0].location, 0, neighbors_set, neighbor_size, (int) agents[a].path.size() - 1);
-    int count = 0;
+    set<int> neighbors_set; int count = 0;
     while (neighbors_set.size() < neighbor_size && count < 10)
     {
+        if (b){
+            a = bernoulie();
+        }
+        else {
+            a = wrapper();
+        }
+        if (a < 0)
+            return false;
+        local_tabu.insert(a);
         int t = rand() % agents[a].path.size();
         randomWalk(a, agents[a].path[t].location, t, neighbors_set, neighbor_size, (int) agents[a].path.size() - 1);
         count++;
-        // select the next agent randomly
-        int idx = rand() % neighbors_set.size();
-        int i = 0;
-        for (auto n : neighbors_set)
-        {
-            if (i == idx)
-            {
-                a = i;
-                break;
-            }
-            i++;
-        }
     }
+    local_tabu.clear();
     if (neighbors_set.size() < 2){
         return false;
     }
@@ -977,29 +963,20 @@ bool LNS::generateNeighborByRandomWalkProbSelect()
         }
     }
 
-    int a = findAgentBasedOnDelay();
-    if (a < 0)
-        return false;
+
     set<int> neighbors_set;
     int count = 0;
-    randomWalk(a, agents[a].path[0].location, 0, neighbors_set, neighbor_size, (int) agents[a].path.size() - 1);
     while (neighbors_set.size() < neighbor_size && count < 10)
     {
+        int a = findAgentBasedOnDelay();
+        if (a < 0)
+            return false;
+
         int t = rand() % agents[a].path.size();
         randomWalk(a, agents[a].path[t].location, t, neighbors_set, neighbor_size, (int) agents[a].path.size() - 1);
         count++;
-        //adjusting here to randomly explore the neighborhood
-                int idx = rand() % neighbors_set.size();
-        int i = 0;
-        for (auto n : neighbors_set)
-        {
-            if (i == idx)
-            {
-                a = i;
-                break;
-            }
-            i++;
-        }
+//        cout << "## randomwalk_iter : " << count << " removal_set_size : " << neighbors_set.size() << " agent : " << a << " delay : " << agents[a].getNumOfDelays() << " (" << max_delay << ")" << endl;
+
     }
     if (neighbors_set.size() < 2)
         return false;
@@ -1233,6 +1210,9 @@ int LNS::bernoulie() {
     // Add all agents to the priority queue
     for (const Agent& agent : agents) {
         int delay = agent.getNumOfDelays();
+        if (local_tabu.find(agent.id) != local_tabu.end()){
+            delay *= 0.5;
+        }
         int id = agent.id;
         queue.push(std::make_pair(delay, id));
     }
@@ -1268,6 +1248,9 @@ int LNS::normal() {
     for (const Agent& agent : agents) {
         int delay = agent.getNumOfDelays();
         int id = agent.id;
+        if (local_tabu.find(agent.id) != local_tabu.end()){
+            delay *= 0.5;
+        }
         queue.push(std::make_pair(delay, id));
     }
 
