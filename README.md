@@ -15,9 +15,7 @@ make
 
 Run the code with:
 ```
-./address -m Paris_1_256.map -a Paris_1_256-random-1.scen -o test -k 600 -t 60 --stats "stats.txt"
---outputPaths=paths.txt --seed=0 --maxIterations=1000000 --destroyStrategy=Adaptive --screen=1 --algorithm=canonical
---b=add --epsilon=0.9 --decay=0.005 --k=64 --regions=1000 --banditAlgo=Thompson --neighborCandidateSizes=5
+./address -m warehouse-20-40-10-2-2.map -a warehouse-20-40-10-2-2-random-12.scen -o test -k 1000 -t 60 --stats "stats.txt" --outputPaths=paths.txt --seed=0 --maxIterations=1000000 --destroyStrategy=Prob --screen=2 --algorithm=bernoulie --k=32
 
 ```
 

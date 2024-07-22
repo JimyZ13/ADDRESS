@@ -58,6 +58,9 @@ private:
     PIBTPPS_option pipp_option;
     int num_agent;
     double epsilon;
+    double tabu_discount = 0.5; // delayed agent selected probability discount if it's in the tabu_list
+    vector<int> delayed_agents;
+    vector<int> delay_list;
     b alns_bernoulie = BCANONICAL;
     double decay;
     int k;
@@ -128,6 +131,8 @@ private:
     int location_bernoulie();
     int normal();
     int location_normal();
+    bool generateNeighborByRandomWalkProbSelect();
+    int findAgentBasedOnDelay();
     void randomWalk(int agent_id, int start_location, int start_timestep,
                     set<int>& neighbor, int neighbor_size, int upperbound);
 };

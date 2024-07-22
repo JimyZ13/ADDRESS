@@ -66,7 +66,7 @@ LNS::LNS(const Instance& instance, double time_limit, const string & init_algo_n
         destroy_strategy = INTERSECTION;
     else if (destroy_name == "Random")
         destroy_strategy = RANDOMAGENTS;
-    else if (destory_name == "Prob"){
+    else if (destroy_name == "Prob"){
         destroy_strategy = RANDOMWALKPROB;
     }
     else
@@ -836,36 +836,22 @@ bool LNS::generateNeighborByRandomWalk(int b)
         return true;
     }
     int a = -1;
-    if (b){
-        a = bernoulie();
-    }
-    else {
-        a = wrapper();
-    }
-    if (a < 0)
-        return false;
     
     set<int> neighbors_set;
-    neighbors_set.insert(a);
-    randomWalk(a, agents[a].path[0].location, 0, neighbors_set, neighbor_size, (int) agents[a].path.size() - 1);
     int count = 0;
     while (neighbors_set.size() < neighbor_size && count < 10)
     {
+        if (b){
+            a = bernoulie();
+        }
+        else {
+            a = wrapper();
+        }
+        if (a < 0 )
+            return false;
         int t = rand() % agents[a].path.size();
         randomWalk(a, agents[a].path[t].location, t, neighbors_set, neighbor_size, (int) agents[a].path.size() - 1);
         count++;
-        // select the next agent randomly
-        int idx = rand() % neighbors_set.size();
-        int i = 0;
-        for (auto n : neighbors_set)
-        {
-            if (i == idx)
-            {
-                a = i;
-                break;
-            }
-            i++;
-        }
     }
     if (neighbors_set.size() < 2){
         return false;
