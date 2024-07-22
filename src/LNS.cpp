@@ -66,6 +66,9 @@ LNS::LNS(const Instance& instance, double time_limit, const string & init_algo_n
         destroy_strategy = INTERSECTION;
     else if (destroy_name == "Random")
         destroy_strategy = RANDOMAGENTS;
+    else if (destory_name == "Prob"){
+        destroy_strategy = RANDOMWALKPROB;
+    }
     else
     {
         cerr << "Destroy heuristic " << destroy_name << " does not exists. " << endl;
@@ -214,6 +217,9 @@ bool LNS::run()
                 break;
             case DESTROY_COUNT:
                 succ = generateNeighborByRandomWalk(1);
+                break;
+            case RANDOMWALKPROB:
+                succ = generateNeighborByRandomWalkProbSelect();
                 break;
             default:
                 cerr << "Wrong neighbor generation strategy" << endl;
@@ -942,6 +948,86 @@ int LNS::location_wrapper(){
 }
 
 
+bool LNS::generateNeighborByRandomWalkProbSelect()
+{
+    if (neighbor_size >= (int)agents.size())
+    {
+        neighbor.agents.resize(agents.size());
+        for (int i = 0; i < (int)agents.size(); i++)
+            neighbor.agents[i] = i;
+        return true;
+    }
+
+    // clear and init delayed_agents and delay_list before each lns iteration
+    delayed_agents.clear();
+    delay_list.clear();
+    int max_delay = 0;
+    for (int i = 0; i < agents.size(); i++)
+    {
+        int agent_delay = agents[i].getNumOfDelays();
+        if (agent_delay > max_delay) max_delay = agent_delay;
+        if (agent_delay > 0){
+            delayed_agents.push_back(i);
+            // if the agent is selected in previous rounds, discount it by tabu_discount
+            if (tabu_list.find(i) != tabu_list.end()){
+                delay_list.push_back(agent_delay*tabu_discount);
+            }else{
+                delay_list.push_back(agent_delay);
+            }
+        }
+    }
+
+
+    set<int> neighbors_set;
+    int count = 0;
+    while (neighbors_set.size() < neighbor_size && count < 10)
+    {
+        int a = findAgentBasedOnDelay();
+        if (a < 0)
+            return false;
+
+        int t = rand() % agents[a].path.size();
+        randomWalk(a, agents[a].path[t].location, t, neighbors_set, neighbor_size, (int) agents[a].path.size() - 1);
+        count++;
+//        cout << "## randomwalk_iter : " << count << " removal_set_size : " << neighbors_set.size() << " agent : " << a << " delay : " << agents[a].getNumOfDelays() << " (" << max_delay << ")" << endl;
+
+    }
+    if (neighbors_set.size() < 2)
+        return false;
+    neighbor.agents.assign(neighbors_set.begin(), neighbors_set.end());
+
+
+    return true;
+}
+
+int LNS::findAgentBasedOnDelay() {
+    // Ensure both vectors are of the same size
+    if (delayed_agents.size() != delay_list.size()) {
+        throw std::invalid_argument("Vectors must be of the same size.");
+    }
+
+    // Compute the cumulative sum of delay_list
+    std::vector<int> cumulative_weights(delay_list.size());
+    std::partial_sum(delay_list.begin(), delay_list.end(), cumulative_weights.begin());
+
+    // Generate a random number in the range [0, total weight)
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(0, cumulative_weights.back() - 1);
+
+    int random_number = distrib(gen);
+
+    // Find the index where random_number fits in cumulative_weights
+    auto it = std::lower_bound(cumulative_weights.begin(), cumulative_weights.end(), random_number);
+
+    // Calculate the index based on the iterator
+    int index = std::distance(cumulative_weights.begin(), it);
+
+    // Return the corresponding element from delayed_agents
+    tabu_list.insert(delayed_agents[index]);
+    delay_list[index] *= tabu_discount; // if selected in the current LNS round, discount it again
+    return delayed_agents[index];
+}
 
 int LNS::location_greedy(){
     double min = INT_MAX;

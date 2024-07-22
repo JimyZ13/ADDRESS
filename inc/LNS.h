@@ -12,7 +12,7 @@
 #include "pps.h"
 #include "winpibt.h"
 
-enum destroy_heuristic { RANDOMAGENTS, RANDOMWALK, INTERSECTION, DESTROY_COUNT };
+enum destroy_heuristic { RANDOMAGENTS, RANDOMWALK, INTERSECTION, DESTROY_COUNT, RANDOMWALKPROB};
 enum algorithm { CANONICAL, GREEDY, EPSILON, EPSILON_DECAY, UCB, TOPK_GREEDY, TOPK_EPSILON, TOP_EPSILON_DECAY, TOPK_UCB, BERNOULIE, NORMAL };
 enum b { BCANONICAL, ADD, REPLACE};
 // TODO: adaptively change the neighbor size, that is,
