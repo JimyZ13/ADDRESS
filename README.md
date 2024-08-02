@@ -17,6 +17,9 @@ Run the code with:
 ```
 ./address -m Paris_1_256.map -a Paris_1_256-random-1.scen -o test -k 1000 -t 60 --stats "stats.txt" --outputPaths=paths.txt --seed=0 --maxIterations=1000000 --destroyStrategy=RandomWalk --screen=2 --algorithm=bernoulie --k=32
 
+
+./balance -m "Paris_1_256.map" -a "Paris_1_256-random-24.scen" -o "test" -k "200" -t 60 --outputPaths="paths" --maxIterations 100000000 --algorithm canonical --stats "stats" --destroyStrategy Prob --screen 2
+
 ```
 
 - m: the map file from the MAPF benchmark
