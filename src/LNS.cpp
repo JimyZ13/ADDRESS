@@ -873,6 +873,12 @@ bool LNS::generateNeighborByRandomWalk(int b)
     return true;
 }
 
+/**
+ * @brief ADDRESS: a wrapper for various bandit sampeling methods. 
+ * Returns the selected agent index and sets global variables. 
+ * 
+ * @return int 
+ */
 int LNS::wrapper(){
     switch(algo){
         case CANONICAL:
@@ -911,7 +917,12 @@ int LNS::wrapper(){
     }
 }
 
-
+/**
+ * @brief ADDRESS: wrapper for location-based various Bandit sampeling methods.
+ * Returns an integer indicating the region paritition that is selected. 
+ * 
+ * @return int 
+ */
 int LNS::location_wrapper(){
     switch(algo){
         case CANONICAL:
@@ -941,8 +952,11 @@ int LNS::location_wrapper(){
     }
 }
 
-
-
+/**
+ * @brief ADDRESS: location-based greedy bandit sampeling implementation.
+ * 
+ * @return int 
+ */
 int LNS::location_greedy(){
     double min = INT_MAX;
     int index = 0;
@@ -957,6 +971,11 @@ int LNS::location_greedy(){
     return index;
 }
 
+/**
+ * @brief ADDRESS: location-based epsilon-greedy bandit sampeling implementation. 
+ * 
+ * @return int 
+ */
 int LNS::location_epsilonGreedy(){
     std::mt19937 rng(std::random_device{}());
     std::uniform_real_distribution<double> dist(0.0, 1.0);
@@ -985,6 +1004,11 @@ int LNS::location_epsilonGreedy(){
     }
 }
 
+/**
+ * @brief ADDRESS: location-based decay-epsilon-greedy bandit sampeling implementation
+ * 
+ * @return int 
+ */
 int LNS::location_decay_epsilonGreedy(){
     std::mt19937 rng(std::random_device{}());
     std::uniform_real_distribution<double> dist(0.0, 1.0);
@@ -1016,7 +1040,11 @@ int LNS::location_decay_epsilonGreedy(){
     }
 }
 
-
+/**
+ * @brief ADDRESS: location-based bernoulie bandit sampeling implementation.
+ * 
+ * @return int 
+ */
 int LNS::location_bernoulie(){
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -1034,6 +1062,10 @@ int LNS::location_bernoulie(){
     return index;
 }
 
+/**
+ * @brief ADDRESS: location priority-queue comparator implementation.
+ * 
+ */
 struct LocationComparator{
     bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const {
         return a.first < b.first;
@@ -1066,6 +1098,11 @@ int LNS::findMostDelayedAgent()
     return a;
 }
 
+/**
+ * @brief ADDRESS: agent-based greedy bandit sampeling implementation.
+ * 
+ * @return int 
+ */
 int LNS::greedy()
 {
     int max = 0;
@@ -1092,6 +1129,11 @@ int LNS::greedy()
     return index;
 }
 
+/**
+ * @brief agent-based epsilon greedy bandit sampeling implementation. 
+ * 
+ * @return int 
+ */
 int LNS::epsilonGreedy()
 {
     std::mt19937 rng(std::random_device{}());
@@ -1121,12 +1163,21 @@ int LNS::epsilonGreedy()
         }
 }
 
+/**
+ * @brief ADDRESS: agent-based priority-queue comparator.
+ * 
+ */
 struct AgentComparator {
     bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const {
         return a.first < b.first;
     }
 };
 
+/**
+ * @brief ADDRESS: agent-based bernoulie bandit sampeling implementation. 
+ * 
+ * @return int 
+ */
 int LNS::bernoulie() {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -1162,6 +1213,11 @@ int LNS::bernoulie() {
     return best_agent;
 }
 
+/**
+ * @brief ADDRESS: agent-based normal bandit sampeling implementation.
+ * 
+ * @return int 
+ */
 int LNS::normal() {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -1197,6 +1253,11 @@ int LNS::normal() {
     return best_agent;
 }
 
+/**
+ * @brief ADDRESS: location-based normal bandit sampeling implementation.
+ * 
+ * @return int 
+ */
 int LNS::location_normal() {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -1215,6 +1276,11 @@ int LNS::location_normal() {
     return best_index;
 }
 
+/**
+ * @brief ADDRESS: agent-based epsilon greedy bandit sampeling implementation.
+ * 
+ * @return int 
+ */
 int LNS::topKEpsilonGreedy()
 {
     std::mt19937 rng(std::random_device{}());
@@ -1262,6 +1328,11 @@ int LNS::topKEpsilonGreedy()
     return index;
 }
 
+/**
+ * @brief ADDRESS: agent-based decay epsilon greedy sampeling implementation.
+ * 
+ * @return int 
+ */
 int LNS::topKDecayEpsilonGreedy()
 {
     std::mt19937 rng(std::random_device{}());
