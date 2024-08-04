@@ -16,9 +16,7 @@ make
 Run the code with:
 ```
 ./address -m Paris_1_256.map -a Paris_1_256-random-1.scen -o test -k 600 -t 60 --stats "stats.txt"
---outputPaths=paths.txt --seed=0 --maxIterations=1000000 --destroyStrategy=Adaptive --screen=1 --algorithm=canonical
---b=add --epsilon=0.9 --decay=0.005 --k=64 --regions=1000 --banditAlgo=Thompson --neighborCandidateSizes=5
-
+--outputPaths=paths.txt --seed=0 --maxIterations=1000000 --destroyStrategy=RandomWalk --screen=1 --algorithm=bernoulie --k=64 
 ```
 
 - m: the map file from the MAPF benchmark
@@ -38,19 +36,17 @@ Run the code with:
 
 You can find more details and explanations for all parameters with:
 ```
-./balance --help
+./address --help
 ```
 
-We provide example instance files `random-32-32-20.map` and `random-32-32-20-random-1.scen` in the repo. More instances can be downloaded from the [MovingAI MAPF benchmark](https://movingai.com/benchmarks/mapf/index.html).
+The benchmarking test suite for MAPF problems can be downloaded from the [MovingAI MAPF benchmark](https://movingai.com/benchmarks/mapf/index.html).
 
 ## Credits
 
-The software is mainly based on code developed by Jiaoyang Li and Zhe Chen in [MAPF-LNS2](https://github.com/Jiaoyang-Li/MAPF-LNS2).
+The software is mainly based on code developed by Jiaoyang Li and Zhe Chen in [MAPF-LNS2](https://github.com/Jiaoyang-Li/MAPF-LNS2) and Thomy Phan in [BALANCE](https://github.com/thomyphan/anytime-mapf).
 
 The rule-based MAPF solvers (i.e., PPS, PIBT, and winPIBT) inside the software were borrowed from 
 https://github.com/Kei18/pibt/tree/v1.3
-
-BALANCE is released under USC–Research License. See license.txt for further details.
 
 ## References
 
