@@ -1,8 +1,8 @@
-# ADDRESS: Bandit-based Adaptive Anytime Multi-Agent Path Finding
+# Anytime Multi-Agent Path Finding with an Adaptive Delay-Based Heuristic
 
 This software is based on the latest [MAPF-LNS implementation](https://github.com/Jiaoyang-Li/MAPF-LNS2) from [1] and [Anytime Multi-Agent Path Finding](https://github.com/thomyphan/anytime-mapf) from [2].
 
-ADDRESS is a bandit-enhanced anytime multi-agent path-finding algorithm. The algorithmic framework is based on MAPF-LNS [1] with the neighborhood destroy heuristic replaced by a Thomson Sampling Bandit. 
+Adaptive Delay-based Destroy-and-Repair Enhanced with Success-based Self-Learning (ADDRESS) is a bandit-enhanced anytime multi-agent path-finding algorithm. It is a single-destroy-heuristic variant adaptation of MAPF-LNS proposed in [1] that applies restricted Thompson Sampling to the top-K set of most delayed agents. ADDRESS demonstrates over 50% improvement in AuC on large scale scenarios compared to other state-of-the-art MAPF algorithms. 
 
 ## Usage
 The code requires the external libraries [`BOOST 1.81.0`](https://www.boost.org/) and [`Eigen 3.3`](https://eigen.tuxfamily.org/), and [`CMake`](https://cmake.org) for building the code. 
@@ -15,11 +15,8 @@ make
 
 Run the code with:
 ```
-./address -m Paris_1_256.map -a Paris_1_256-random-1.scen -o test -k 1000 -t 60 --stats "stats.txt" --outputPaths=paths.txt --seed=0 --maxIterations=1000000 --destroyStrategy=RandomWalk --screen=2 --algorithm=bernoulie --k=32
-
-
-./balance -m "Paris_1_256.map" -a "Paris_1_256-random-24.scen" -o "test" -k "200" -t 60 --outputPaths="paths" --maxIterations 100000000 --algorithm canonical --stats "stats" --destroyStrategy Prob --screen 2
-
+./address -m Paris_1_256.map -a Paris_1_256-random-1.scen -o test -k 600 -t 60 --stats "stats.txt"
+--outputPaths=paths.txt --seed=0 --maxIterations=1000000 --destroyStrategy=RandomWalk --screen=1 --algorithm=bernoulie --k=64 
 ```
 
 - m: the map file from the MAPF benchmark
@@ -39,19 +36,17 @@ Run the code with:
 
 You can find more details and explanations for all parameters with:
 ```
-./balance --help
+./address --help
 ```
 
-We provide example instance files `random-32-32-20.map` and `random-32-32-20-random-1.scen` in the repo. More instances can be downloaded from the [MovingAI MAPF benchmark](https://movingai.com/benchmarks/mapf/index.html).
+The benchmarking test suite for MAPF problems can be downloaded from the [MovingAI MAPF benchmark](https://movingai.com/benchmarks/mapf/index.html).
 
 ## Credits
 
-The software is mainly based on code developed by Jiaoyang Li and Zhe Chen in [MAPF-LNS2](https://github.com/Jiaoyang-Li/MAPF-LNS2).
+The software is mainly based on code developed by Jiaoyang Li and Zhe Chen in [MAPF-LNS2](https://github.com/Jiaoyang-Li/MAPF-LNS2) and Thomy Phan in [BALANCE](https://github.com/thomyphan/anytime-mapf).
 
 The rule-based MAPF solvers (i.e., PPS, PIBT, and winPIBT) inside the software were borrowed from 
 https://github.com/Kei18/pibt/tree/v1.3
-
-BALANCE is released under USC–Research License. See license.txt for further details.
 
 ## References
 
