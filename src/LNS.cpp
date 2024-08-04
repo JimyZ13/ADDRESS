@@ -30,6 +30,7 @@ LNS::LNS(const Instance& instance, double time_limit, const string & init_algo_n
     location_q_values = new std::vector<double>();
     start_time = Time::now();
     replan_time_limit = time_limit / 100;
+    // Handel different ALNS options:
     if (destroy_name == "Adaptive")
     {
         if (b == "canonical"){
@@ -74,6 +75,7 @@ LNS::LNS(const Instance& instance, double time_limit, const string & init_algo_n
      this->epsilon = epsilon;
     this->decay = decay;
     this->k = k;
+    // Handel different bandit implementations:
     if (algorithm == "canonical"){
         algo = CANONICAL;
     }
@@ -517,7 +519,7 @@ bool LNS::runPP()
             long sum = ((*q_values)[current_index] * ((*frequency)[current_index] - 1)) + sum_of_costs;
             long temp = (sum / (*frequency)[current_index]);
             (*q_values)[current_index] = (int)temp;
-            //for bernoulie bandit
+            //for bernoulie bandit update distribution
             if (algo == BERNOULIE|| destroy_strategy == DESTROY_COUNT){
                 int suc = (neighbor.old_sum_of_costs - neighbor.sum_of_costs) > 0 ? 1 : -1;
                 if (suc == 1){
@@ -729,6 +731,7 @@ void LNS::chooseDestroyHeuristicbyALNS()
     else if (alns_bernoulie == REPLACE){
         switch (selected_neighbor)
         {
+            // Replace random walk with bernoulie
             case 0 : destroy_strategy = DESTROY_COUNT;cout << "bernoulie" << endl;break;
             case 1 : destroy_strategy = INTERSECTION; cout << "intersection" << endl;break;
             case 2 : destroy_strategy = RANDOMAGENTS; cout << "random" << endl;break;
@@ -738,6 +741,7 @@ void LNS::chooseDestroyHeuristicbyALNS()
     else {
         switch (selected_neighbor)
         {
+            // Add bernoulie as the 4th option
             case 0 : destroy_strategy = RANDOMWALK;cout << "randomwalk" << endl;break;
             case 1 : destroy_strategy = INTERSECTION; cout << "intersection" << endl;break;
             case 2 : destroy_strategy = RANDOMAGENTS; cout << "random" << endl;break;
@@ -768,7 +772,7 @@ bool LNS::generateNeighborByIntersection()
         }
     }
     int location = 0;
-    //todo add wrapper and implmeentation
+    // The wrapper dynamically chosses the bandit implementation:
     int region = location_wrapper();
     if (region == -1){
         auto pt = intersections.begin();
@@ -830,9 +834,11 @@ bool LNS::generateNeighborByRandomWalk(int b)
         return true;
     }
     int a = -1;
+    // If full ADDRESS is requested, always use bernoulie
     if (b){
         a = bernoulie();
     }
+    // Else use wrapper to dynamically select bandit
     else {
         a = wrapper();
     }
@@ -1174,7 +1180,8 @@ struct AgentComparator {
 };
 
 /**
- * @brief ADDRESS: agent-based bernoulie bandit sampeling implementation. 
+ * @brief ADDRESS: agent-based bernoulie bandit sampeling implementation.
+ * This Bernoulie Bandit is the choice bandit for ADDRESS. 
  * 
  * @return int 
  */
@@ -1380,6 +1387,11 @@ int LNS::topKDecayEpsilonGreedy()
     return index;
 }
 
+/**
+ * @brief ADDRESS: location-based UCB-1 bandit sampeling implementation.
+ * 
+ * @return int 
+ */
 int LNS::location_UCB()
 {
     std::mt19937 rng(std::random_device{}());
@@ -1409,8 +1421,11 @@ int LNS::location_UCB()
     return index;
 }
 
-
-
+/**
+ * @brief ADDRESS: agent-based UCB-1 bandit sampeling implementation.
+ * 
+ * @return int 
+ */
 int LNS::topKUCB()
 {
     std::mt19937 rng(std::random_device{}());
@@ -1440,7 +1455,6 @@ int LNS::topKUCB()
         queue.pop();
     }
 
-    
     double min = 0;
     int index = 0;
     for (auto i : topAgents){
@@ -1456,6 +1470,11 @@ int LNS::topKUCB()
     return index;
 }
 
+/**
+ * @brief ADDRESS: agent-based epsilon-greedy bandit sampeling implementation.
+ * 
+ * @return int 
+ */
 int LNS::decayEpsilonGreedy()
 {
     std::mt19937 rng(std::random_device{}());
@@ -1489,6 +1508,11 @@ int LNS::decayEpsilonGreedy()
         }
 }
 
+/**
+ * @brief ADDRESS: agent-based epsilon decay bandit sampeling implementation.
+ * 
+ * @return int 
+ */
 int LNS::epsilonDelay(){
     std::mt19937 rng(std::random_device{}());
     std::uniform_real_distribution<double> dist(0.0, 1.0);
@@ -1510,6 +1534,11 @@ int LNS::epsilonDelay(){
         }
 }
 
+/**
+ * @brief ADDRESS: agent-based UCB-1 bandit sampeling implementation.
+ * 
+ * @return int 
+ */
 int LNS::ucb()
 {   
     int max = 0;
@@ -1536,7 +1565,6 @@ int LNS::ucb()
     return index;
 
 }
-
 
 int LNS::findRandomAgent() const
 {
