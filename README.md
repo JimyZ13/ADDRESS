@@ -1,8 +1,8 @@
-# ADDRESS: Bandit-based Adaptive Anytime Multi-Agent Path Finding
+# Anytime Multi-Agent Path Finding with an Adaptive Delay-Based Heuristic
 
 This software is based on the latest [MAPF-LNS implementation](https://github.com/Jiaoyang-Li/MAPF-LNS2) from [1] and [Anytime Multi-Agent Path Finding](https://github.com/thomyphan/anytime-mapf) from [2].
 
-ADDRESS is a bandit-enhanced anytime multi-agent path-finding algorithm. The algorithmic framework is based on MAPF-LNS [1] with the neighborhood destroy heuristic replaced by a Thomson Sampling Bandit. 
+Adaptive Delay-based Destroy-and-Repair Enhanced with Success-based Self-Learning (ADDRESS) is a bandit-enhanced anytime multi-agent path-finding algorithm. It is a single-destroy-heuristic variant adaptation of MAPF-LNS proposed in [1] that applies restricted Thompson Sampling to the top-K set of most delayed agents. ADDRESS demonstrates over 50% improvement in AuC on large scale scenarios compared to other state-of-the-art MAPF algorithms. 
 
 ## Usage
 The code requires the external libraries [`BOOST 1.81.0`](https://www.boost.org/) and [`Eigen 3.3`](https://eigen.tuxfamily.org/), and [`CMake`](https://cmake.org) for building the code. 
