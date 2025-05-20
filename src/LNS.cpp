@@ -1282,7 +1282,7 @@ int LNS::bernoulie() {
         queue.pop();
     }
     // Sample from the Beta distribution for each agent
-    for (int i = 0 ; i < k ; i++) {
+    for (int i : topAgents) {
         boost::random::beta_distribution<> beta_dist(alpha[i], beta[i]);
         samples[i] = beta_dist(gen);
     }
@@ -1325,7 +1325,7 @@ int LNS::normal() {
     }
 
     // Sample from the Gaussian distribution for each agent
-    for (int i = 0 ; i < k ; i++) {
+    for (int i : topAgents) {
         std::normal_distribution<double> normal_dist(mu[i], std::sqrt(sigma2[i]));
         samples[i] = normal_dist(gen);
     }
