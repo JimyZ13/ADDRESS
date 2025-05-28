@@ -1301,10 +1301,13 @@ int LNS::bernoulie() {
         topAgents.push_back(queue.top().second);
         queue.pop();
     }
+
+    int cnt = 0;
     // Sample from the Beta distribution for each agent
     for (int i : topAgents) {
         boost::random::beta_distribution<> beta_dist(alpha[i], beta[i]);
-        samples[i] = beta_dist(gen);
+        samples[cnt] = beta_dist(gen);
+        cnt++;
     }
 
     // Find the agent with the highest sample value
@@ -1342,9 +1345,11 @@ int LNS::normal() {
     }
 
     // Sample from the Gaussian distribution for each agent
+    int cnt = 0;
     for (int i : topAgents) {
         std::normal_distribution<double> normal_dist(mu[i], std::sqrt(sigma2[i]));
-        samples[i] = normal_dist(gen);
+        samples[cnt] = normal_dist(gen);
+        cnt++;
     }
 
     // Find the agent with the minimum sample value
